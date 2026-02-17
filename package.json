@@ -6,8 +6,10 @@
   "scripts": {
     "build": "run-p type-check \"build-only {@}\" --",
     "build-only": "vite build",
+    "build:gh": "vite build",
     "commit": "cz",
     "dev": "vite",
+    "deploy": "gh-pages -d dist",
     "format": "prettier --write --experimental-cli src/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -47,7 +49,8 @@
     "vite": "^7.3.1",
     "vite-plugin-vue-devtools": "^8.0.6",
     "vitest": "^4.0.18",
-    "vue-tsc": "^3.2.4"
+    "vue-tsc": "^3.2.4",
+    "gh-pages": "^6.1.1"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

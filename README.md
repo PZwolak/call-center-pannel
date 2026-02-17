@@ -1,48 +1,63 @@
-# .
+# Call Center Panel
 
-This template should help get you started developing with Vue 3 in Vite.
+Aplikacja webowa do obsługi zgłoszen klientow call center. Umozliwia przegladanie, filtrowanie i aktualizowanie statusow zgloszen.
 
-## Recommended IDE Setup
+## Tech stack
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Vue 3 (Composition API)
+- Pinia
+- Vue Router
+- PrimeVue
+- Sass (SASS)
 
-## Recommended Browser Setup
+## Funkcje
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Lista zgloszen z filtrowaniem po statusie
+- Szczegoly zgloszenia z mozliwoscia zmiany statusu
+- Klikalne wiersze w tabeli
+- Loader podczas ladowania danych
+- Responsywne UI
 
-## Type Support for `.vue` Imports in TS
+## Uruchomienie lokalne
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Build
 
-```sh
+```bash
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## GitHub Pages
 
-```sh
-npm run test:unit
+Repozytorium: https://github.com/PZwolak/call-center-pannel
+
+Aplikacja korzysta z `base` ustawionego w `vite.config.ts`:
+
+```ts
+base: '/call-center-pannel/'
 ```
+
+Publikacja:
+
+```bash
+npm run build:gh
+npm run deploy
+```
+
+Po wdrozeniu aplikacja bedzie dostepna pod adresem:
+
+```
+https://pzwolak.github.io/call-center-pannel/
+```
+
+## Skrypty
+
+- `npm run dev` - start dev server
+- `npm run build` - build produkcyjny
+- `npm run test:unit` - testy jednostkowe
+- `npm run build:gh` - build pod GitHub Pages
+- `npm run deploy` - publikacja na GitHub Pages
