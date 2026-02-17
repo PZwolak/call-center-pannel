@@ -4,12 +4,12 @@
 
     <div v-if="store.loading" :class="className('loader')">
       <ProgressSpinner strokeWidth="4" />
-      <p>Ładowanie zgłoszeń...</p>
+      <p :class="className('loader-text')">Ładowanie zgłoszeń...</p>
     </div>
 
     <template v-else>
       <div :class="className('filters')">
-        <label for="status-filter">Status:</label>
+        <label for="status-filter" :class="className('label')">Status:</label>
         <Dropdown
           id="status-filter"
           v-model="statusFilter"
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTicketsStore } from '@ThemeStores/tickets'
 import { TicketStatusEnum, TicketPriorityEnum, statusOptions, priorityLabel } from '@/js/types/model/enums'
@@ -85,6 +85,12 @@ const tickets = computed(() => store.filteredTickets(statusFilter.value))
 const goToDetails = (ticket: Ticket): void => {
   router.push({ name: 'ticket-details', params: { id: ticket.id } })
 }
+
+onMounted(() => {
+  if (!store.tickets.length) {
+    store.fetchTickets()
+  }
+})
 </script>
 
 <style lang="sass" scoped>
@@ -107,10 +113,10 @@ const goToDetails = (ticket: Ticket): void => {
     margin-bottom: var(--cp-spacing-lg)
     justify-content: flex-start
 
-    label
-      font-size: var(--cp-font-size-base)
-      font-weight: var(--cp-font-weight-semibold)
-      color: var(--cp-text-primary)
+  &__label
+    font-size: var(--cp-font-size-base)
+    font-weight: var(--cp-font-weight-semibold)
+    color: var(--cp-text-primary)
 
   &__dropdown
     min-width: 180px
@@ -136,19 +142,21 @@ const goToDetails = (ticket: Ticket): void => {
     color: var(--cp-badge-text-color)
     min-width: var(--cp-badge-min-width)
 
-  &__status--new
-    background: var(--cp-status-new-bg)
-  &__status--in_progress
-    background: var(--cp-status-in-progress-bg)
-  &__status--closed
-    background: var(--cp-status-closed-bg)
+  &__status
+    &--new
+      background: var(--cp-status-new-bg)
+    &--in_progress
+      background: var(--cp-status-in-progress-bg)
+    &--closed
+      background: var(--cp-status-closed-bg)
 
-  &__priority--low
-    background: var(--cp-priority-low-bg)
-  &__priority--medium
-    background: var(--cp-priority-medium-bg)
-  &__priority--high
-    background: var(--cp-priority-high-bg)
+  &__priority
+    &--low
+      background: var(--cp-priority-low-bg)
+    &--medium
+      background: var(--cp-priority-medium-bg)
+    &--high
+      background: var(--cp-priority-high-bg)
 
   &__loader
     display: flex
@@ -163,13 +171,21 @@ const goToDetails = (ticket: Ticket): void => {
     color: var(--cp-text-secondary)
     text-align: center
 
-    p
-      font-size: var(--cp-font-size-lg)
-      font-weight: var(--cp-font-weight-medium)
+  &__loader-text
+    font-size: var(--cp-font-size-lg)
+    font-weight: var(--cp-font-weight-medium)
 
-@media (max-width: 768px)
+@media (max-width: var(--cp-breakpoint-md))
   .tickets-list
     padding: var(--cp-spacing-md)
+
+    &__filters
+      flex-direction: column
+      align-items: flex-start
+
+    &__dropdown
+      width: 100%
+
     &__table
       font-size: var(--cp-font-size-sm)
 </style>

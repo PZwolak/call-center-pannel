@@ -10,7 +10,7 @@
 
     <div v-if="store.loading" :class="className('loader')">
       <ProgressSpinner strokeWidth="4" />
-      <p>Ładowanie zgłoszenia...</p>
+      <p :class="className('loader-text')">Ładowanie zgłoszenia...</p>
     </div>
 
     <div v-else-if="ticket"
@@ -65,8 +65,8 @@
 
     <div v-else
          :class="className('notfound')">
-      <i class="pi pi-exclamation-triangle"></i>
-      <p>Nie znaleziono zgłoszenia</p>
+      <i :class="[className('notfound-icon'), 'pi', 'pi-exclamation-triangle']"></i>
+      <p :class="className('notfound-text')">Nie znaleziono zgłoszenia</p>
       <Button @click="goBack"
               label="Wróć do listy"
               severity="primary" />
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTicketsStore } from '@ThemeStores/tickets'
 import { TicketStatusEnum, TicketPriorityEnum, statusOptions, priorityLabel } from '@/js/types/model/enums'
@@ -94,6 +94,18 @@ const store = useTicketsStore()
 const ticketId = Number(route.params.id)
 const ticket = computed(() => store.getTicketById(ticketId))
 const status = ref<TicketStatusEnum>(ticket.value?.status ?? TicketStatusEnum.New)
+
+onMounted(() => {
+  if (!store.tickets.length) {
+    store.fetchTickets()
+  }
+})
+
+watch(ticket, (value) => {
+  if (value) {
+    status.value = value.status
+  }
+})
 
 const saveStatus = (): void => {
   if (ticket.value && status.value !== ticket.value.status) {
@@ -190,28 +202,6 @@ const goBack = (): void => {
     &--high
       background: var(--cp-priority-high-bg)
 
-  &__notfound
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    padding: var(--cp-spacing-2xl)
-    background: var(--cp-bg-primary)
-    border-radius: var(--cp-border-radius-lg)
-    box-shadow: var(--cp-shadow-lg)
-    text-align: center
-
-    i
-      font-size: 4rem
-      color: var(--cp-priority-high)
-      margin-bottom: var(--cp-spacing-md)
-
-    p
-      font-size: var(--cp-font-size-xl)
-      font-weight: var(--cp-font-weight-semibold)
-      color: var(--cp-text-secondary)
-      margin-bottom: var(--cp-spacing-lg)
-
   &__loader
     display: flex
     flex-direction: column
@@ -225,14 +215,44 @@ const goBack = (): void => {
     color: var(--cp-text-secondary)
     text-align: center
 
-    p
-      font-size: var(--cp-font-size-lg)
-      font-weight: var(--cp-font-weight-medium)
+  &__loader-text
+    font-size: var(--cp-font-size-lg)
+    font-weight: var(--cp-font-weight-medium)
 
-@media (max-width: 768px)
+  &__notfound
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: var(--cp-spacing-2xl)
+    background: var(--cp-bg-primary)
+    border-radius: var(--cp-border-radius-lg)
+    box-shadow: var(--cp-shadow-lg)
+    text-align: center
+
+  &__notfound-icon
+    font-size: 48px
+    color: var(--cp-priority-high-bg)
+
+  &__notfound-text
+    font-size: var(--cp-font-size-xl)
+    font-weight: var(--cp-font-weight-semibold)
+    color: var(--cp-text-secondary)
+    margin: var(--cp-spacing-md) 0 var(--cp-spacing-lg)
+
+@media (max-width: var(--cp-breakpoint-md))
   .ticket-details
+    padding: var(--cp-spacing-md)
+
     &__grid
       grid-template-columns: minmax(0, 1fr)
+
+    &__status-edit
+      flex-direction: column
+      align-items: stretch
+
+    &__select
+      width: 100%
 
     &__field--full
       grid-column: 1
