@@ -77,7 +77,7 @@ import { TicketStatusEnum, TicketPriorityEnum, statusOptions, priorityLabel } fr
 import Select from 'primevue/select'
 import Button from 'primevue/button'
 import { formatDate } from '@/js/helpers/formatDate'
-import useClass from '@/js/composables/useBemClasses'
+import useClass from '@/js/composables/useClass'
 
 const { baseClass, className } = useClass('ticket-details')
 

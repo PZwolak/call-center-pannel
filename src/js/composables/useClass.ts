@@ -22,5 +22,6 @@ const useClass = (baseClass: string) => {
     selector,
   }
 }
+
 export default useClass
 export { useClass }

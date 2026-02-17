@@ -63,7 +63,7 @@ import type { Ticket } from '@/js/types/model/ticket'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dropdown from 'primevue/dropdown'
-import useClass from '@/js/composables/useBemClasses'
+import useClass from '@/js/composables/useClass'
 
 const { baseClass, className } = useClass('tickets-list')
 
@@ -73,7 +73,7 @@ const statusFilter = ref<TicketStatusEnum | 'all'>('all')
 
 const tickets = computed(() => store.filteredTickets(statusFilter.value))
 
-const goToDetails = (ticket: Ticket) => {
+const goToDetails = (ticket: Ticket): void => {
   router.push({ name: 'ticket-details', params: { id: ticket.id } })
 }
 </script>
