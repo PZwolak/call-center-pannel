@@ -1,56 +1,64 @@
 <template>
   <section :class="baseClass">
     <h1 :class="className('title')">Zgłoszenia klientów</h1>
-    <div :class="className('filters')">
-      <label for="status-filter">Status:</label>
-      <Dropdown
-        id="status-filter"
-        v-model="statusFilter"
-        :options="[{ label: 'Wszystkie', value: 'all' }, ...statusOptions]"
-        optionLabel="label"
-        optionValue="value"
-        :class="className('dropdown')" />
+
+    <div v-if="store.loading" :class="className('loader')">
+      <ProgressSpinner strokeWidth="4" />
+      <p>Ładowanie zgłoszeń...</p>
     </div>
-    <DataTable
-      :value="tickets"
-      :class="className('table')"
-      dataKey="id"
-      @rowClick="({ data }) => goToDetails(data)"
-      :paginator="true"
-      :rows="10"
-      :rowsPerPageOptions="[10, 20, 50]"
-      responsiveLayout="scroll"
-      sortField="id"
-      :sortOrder="1">
-      <Column field="id"
-              header="ID"
-              style="width: 60px"
-              sortable />
-      <Column field="customerName"
-              header="Imię i nazwisko"
-              sortable />
-      <Column field="subject"
-              header="Temat"
-              sortable />
-      <Column field="status"
-              header="Status"
-              sortable>
-        <template #body="{ data }">
-          <span :class="[className('status'), className('status', data.status)]">
-            {{ statusOptions.find(opt => opt.value === data.status)?.label || data.status }}
-          </span>
-        </template>
-      </Column>
-      <Column field="priority"
-              header="Priorytet"
-              sortable>
-        <template #body="{ data }">
-          <span :class="[className('priority'), className('priority', data.priority)]">
-            {{ priorityLabel(data.priority) }}
-          </span>
-        </template>
-      </Column>
-    </DataTable>
+
+    <template v-else>
+      <div :class="className('filters')">
+        <label for="status-filter">Status:</label>
+        <Dropdown
+          id="status-filter"
+          v-model="statusFilter"
+          :options="[{ label: 'Wszystkie', value: 'all' }, ...statusOptions]"
+          optionLabel="label"
+          optionValue="value"
+          :class="className('dropdown')" />
+      </div>
+      <DataTable
+        :value="tickets"
+        :class="className('table')"
+        dataKey="id"
+        @rowClick="({ data }) => goToDetails(data)"
+        :paginator="true"
+        :rows="10"
+        :rowsPerPageOptions="[10, 20, 50]"
+        responsiveLayout="scroll"
+        sortField="id"
+        :sortOrder="1">
+        <Column field="id"
+                header="ID"
+                style="width: 60px"
+                sortable />
+        <Column field="customerName"
+                header="Imię i nazwisko"
+                sortable />
+        <Column field="subject"
+                header="Temat"
+                sortable />
+        <Column field="status"
+                header="Status"
+                sortable>
+          <template #body="{ data }">
+            <span :class="[className('status'), className('status', data.status)]">
+              {{ statusOptions.find(opt => opt.value === data.status)?.label || data.status }}
+            </span>
+          </template>
+        </Column>
+        <Column field="priority"
+                header="Priorytet"
+                sortable>
+          <template #body="{ data }">
+            <span :class="[className('priority'), className('priority', data.priority)]">
+              {{ priorityLabel(data.priority) }}
+            </span>
+          </template>
+        </Column>
+      </DataTable>
+    </template>
   </section>
 </template>
 
@@ -63,6 +71,7 @@ import type { Ticket } from '@/js/types/model/ticket'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dropdown from 'primevue/dropdown'
+import ProgressSpinner from 'primevue/progressspinner'
 import useClass from '@/js/composables/useClass'
 
 const { baseClass, className } = useClass('tickets-list')
@@ -115,7 +124,8 @@ const goToDetails = (ticket: Ticket): void => {
     overflow: hidden
     cursor: pointer
 
-  &__status, &__priority
+  &__status,
+  &__priority
     display: inline-flex
     align-items: center
     justify-content: center
@@ -139,6 +149,23 @@ const goToDetails = (ticket: Ticket): void => {
     background: var(--cp-priority-medium-bg)
   &__priority--high
     background: var(--cp-priority-high-bg)
+
+  &__loader
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: var(--cp-spacing-md)
+    padding: var(--cp-spacing-2xl)
+    background: var(--cp-bg-primary)
+    border-radius: var(--cp-border-radius-lg)
+    box-shadow: var(--cp-shadow-md)
+    color: var(--cp-text-secondary)
+    text-align: center
+
+    p
+      font-size: var(--cp-font-size-lg)
+      font-weight: var(--cp-font-weight-medium)
 
 @media (max-width: 768px)
   .tickets-list

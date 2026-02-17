@@ -8,7 +8,12 @@
               text />
     </div>
 
-    <div v-if="ticket"
+    <div v-if="store.loading" :class="className('loader')">
+      <ProgressSpinner strokeWidth="4" />
+      <p>Ładowanie zgłoszenia...</p>
+    </div>
+
+    <div v-else-if="ticket"
          :class="className('card')">
       <h1 :class="className('title')">Zgłoszenie #{{ ticket.id }}</h1>
 
@@ -76,6 +81,7 @@ import { useTicketsStore } from '@ThemeStores/tickets'
 import { TicketStatusEnum, TicketPriorityEnum, statusOptions, priorityLabel } from '@/js/types/model/enums'
 import Select from 'primevue/select'
 import Button from 'primevue/button'
+import ProgressSpinner from 'primevue/progressspinner'
 import { formatDate } from '@/js/helpers/formatDate'
 import useClass from '@/js/composables/useClass'
 
@@ -205,6 +211,23 @@ const goBack = (): void => {
       font-weight: var(--cp-font-weight-semibold)
       color: var(--cp-text-secondary)
       margin-bottom: var(--cp-spacing-lg)
+
+  &__loader
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: var(--cp-spacing-md)
+    padding: var(--cp-spacing-2xl)
+    background: var(--cp-bg-primary)
+    border-radius: var(--cp-border-radius-lg)
+    box-shadow: var(--cp-shadow-lg)
+    color: var(--cp-text-secondary)
+    text-align: center
+
+    p
+      font-size: var(--cp-font-size-lg)
+      font-weight: var(--cp-font-weight-medium)
 
 @media (max-width: 768px)
   .ticket-details
