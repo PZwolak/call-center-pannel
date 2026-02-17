@@ -10,5 +10,14 @@
     {
       "path": "./tsconfig.vitest.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ThemeComponents/*": ["src/components/*"],
+      "@ThemeComposables/*": ["src/composables/*"],
+      "@ThemeStores/*": ["src/stores/*"],
+      "@ThemeTypes/*": ["src/js/types/*"]
+    }
+  }
 }
