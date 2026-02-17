@@ -1,7 +1,7 @@
 <template>
-  <section class="tickets-list">
-    <h1 class="tickets-list__title">Zgłoszenia klientów</h1>
-    <div class="tickets-list__filters">
+  <section :class="baseClass">
+    <h1 :class="className('title')">Zgłoszenia klientów</h1>
+    <div :class="className('filters')">
       <label for="status-filter">Status:</label>
       <Dropdown
         id="status-filter"
@@ -9,11 +9,11 @@
         :options="[{ label: 'Wszystkie', value: 'all' }, ...statusOptions]"
         optionLabel="label"
         optionValue="value"
-        class="tickets-list__dropdown" />
+        :class="className('dropdown')" />
     </div>
     <DataTable
       :value="tickets"
-      class="tickets-list__table"
+      :class="className('table')"
       dataKey="id"
       @rowClick="({ data }) => goToDetails(data)"
       :paginator="true"
@@ -36,7 +36,7 @@
               header="Status"
               sortable>
         <template #body="{ data }">
-          <span :class="['tickets-list__status', 'tickets-list__status--' + data.status]">
+          <span :class="[className('status'), className('status', data.status)]">
             {{ statusOptions.find(opt => opt.value === data.status)?.label || data.status }}
           </span>
         </template>
@@ -45,7 +45,7 @@
               header="Priorytet"
               sortable>
         <template #body="{ data }">
-          <span :class="['tickets-list__priority', 'tickets-list__priority--' + data.priority]">
+          <span :class="[className('priority'), className('priority', data.priority)]">
             {{ priorityLabel(data.priority) }}
           </span>
         </template>
@@ -63,6 +63,9 @@ import type { Ticket } from '@/js/types/model/ticket'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dropdown from 'primevue/dropdown'
+import useClass from '@/js/composables/useBemClasses'
+
+const { baseClass, className } = useClass('tickets-list')
 
 const router = useRouter()
 const store = useTicketsStore()
@@ -110,6 +113,7 @@ const goToDetails = (ticket: Ticket) => {
     box-shadow: var(--cp-shadow-md)
     font-size: var(--cp-font-size-base)
     overflow: hidden
+    cursor: pointer
 
   &__status, &__priority
     display: inline-flex

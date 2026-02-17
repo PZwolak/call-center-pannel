@@ -1,6 +1,6 @@
 <template>
-  <section class="ticket-details">
-    <div class="ticket-details__header">
+  <section :class="baseClass">
+    <div :class="className('header')">
       <Button @click="goBack"
               icon="pi pi-arrow-left"
               label="Powrót do listy"
@@ -9,33 +9,33 @@
     </div>
 
     <div v-if="ticket"
-         class="ticket-details__card">
-      <h1 class="ticket-details__title">Zgłoszenie #{{ ticket.id }}</h1>
+         :class="className('card')">
+      <h1 :class="className('title')">Zgłoszenie #{{ ticket.id }}</h1>
 
-      <div class="ticket-details__grid">
-        <div class="ticket-details__field">
-          <span class="ticket-details__label">Klient</span>
-          <span class="ticket-details__value">{{ ticket.customerName }}</span>
+      <div :class="className('grid')">
+        <div :class="className('field')">
+          <span :class="className('label')">Klient</span>
+          <span :class="className('value')">{{ ticket.customerName }}</span>
         </div>
 
-        <div class="ticket-details__field">
-          <span class="ticket-details__label">Temat</span>
-          <span class="ticket-details__value">{{ ticket.subject }}</span>
+        <div :class="className('field')">
+          <span :class="className('label')">Temat</span>
+          <span :class="className('value')">{{ ticket.subject }}</span>
         </div>
 
-        <div class="ticket-details__field ticket-details__field--full">
-          <span class="ticket-details__label">Opis</span>
-          <p class="ticket-details__description">{{ ticket.description }}</p>
+        <div :class="[className('field'), className('field', 'full')]">
+          <span :class="className('label')">Opis</span>
+          <p :class="className('description')">{{ ticket.description }}</p>
         </div>
 
-        <div class="ticket-details__field">
-          <span class="ticket-details__label">Status</span>
-          <div class="ticket-details__status-edit">
+        <div :class="className('field')">
+          <span :class="className('label')">Status</span>
+          <div :class="className('status-edit')">
             <Select v-model="status"
                     :options="statusOptions"
                     optionLabel="label"
                     optionValue="value"
-                    class="ticket-details__select" />
+                    :class="className('select')" />
             <Button @click="saveStatus"
                     :disabled="status === ticket.status"
                     label="Zapisz"
@@ -44,22 +44,22 @@
           </div>
         </div>
 
-        <div class="ticket-details__field">
-          <span class="ticket-details__label">Priorytet</span>
-          <span :class="['ticket-details__priority', 'ticket-details__priority--' + ticket.priority]">
+        <div :class="className('field')">
+          <span :class="className('label')">Priorytet</span>
+          <span :class="[className('priority'), className('priority', ticket.priority)]">
             {{ priorityLabel(ticket.priority) }}
           </span>
         </div>
 
-        <div class="ticket-details__field">
-          <span class="ticket-details__label">Data utworzenia</span>
-          <span class="ticket-details__value">{{ formatDate(ticket.createdAt) }}</span>
+        <div :class="className('field')">
+          <span :class="className('label')">Data utworzenia</span>
+          <span :class="className('value')">{{ formatDate(ticket.createdAt) }}</span>
         </div>
       </div>
     </div>
 
     <div v-else
-         class="ticket-details__notfound">
+         :class="className('notfound')">
       <i class="pi pi-exclamation-triangle"></i>
       <p>Nie znaleziono zgłoszenia</p>
       <Button @click="goBack"
@@ -76,6 +76,10 @@ import { useTicketsStore } from '@ThemeStores/tickets'
 import { TicketStatusEnum, TicketPriorityEnum, statusOptions, priorityLabel } from '@/js/types/model/enums'
 import Select from 'primevue/select'
 import Button from 'primevue/button'
+import { formatDate } from '@/js/helpers/formatDate'
+import useClass from '@/js/composables/useBemClasses'
+
+const { baseClass, className } = useClass('ticket-details')
 
 const route = useRoute()
 const router = useRouter()
@@ -93,16 +97,6 @@ const saveStatus = (): void => {
 
 const goBack = (): void => {
   router.push({ name: 'tickets-list' })
-}
-
-const formatDate = (dateStr: string): string => {
-  return new Date(dateStr).toLocaleString('pl-PL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
 }
 </script>
 
