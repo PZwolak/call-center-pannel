@@ -26,7 +26,8 @@
         :paginator="true"
         :rows="10"
         :rowsPerPageOptions="[10, 20, 50]"
-        responsiveLayout="scroll"
+        responsiveLayout="stack"
+        breakpoint="768px"
         sortField="id"
         :sortOrder="1">
         <Column field="id"
@@ -94,6 +95,8 @@ onMounted(() => {
 </script>
 
 <style lang="sass" scoped>
+@use '@/styles/variables' as *
+
 .tickets-list
   max-width: var(--cp-max-width-list)
   margin: var(--cp-spacing-xl) auto
@@ -175,17 +178,39 @@ onMounted(() => {
     font-size: var(--cp-font-size-lg)
     font-weight: var(--cp-font-weight-medium)
 
-@media (max-width: var(--cp-breakpoint-md))
+@media (max-width: $cp-breakpoint-md)
   .tickets-list
     padding: var(--cp-spacing-md)
 
+    &__title
+      font-size: var(--cp-font-size-2xl)
+      margin-bottom: var(--cp-spacing-lg)
+
     &__filters
       flex-direction: column
-      align-items: flex-start
+      align-items: stretch
+      gap: var(--cp-spacing-sm)
 
     &__dropdown
       width: 100%
 
     &__table
       font-size: var(--cp-font-size-sm)
+
+      :deep(.p-datatable-thead)
+        display: none
+
+      :deep(.p-datatable-tbody > tr > td)
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: var(--cp-spacing-sm)
+        padding: var(--cp-spacing-sm) var(--cp-spacing-md)
+
+      :deep(.p-datatable-tbody > tr > td .p-column-title)
+        font-weight: var(--cp-font-weight-semibold)
+        color: var(--cp-text-secondary)
+
+      :deep(.p-datatable-tbody > tr)
+        border-bottom: 1px solid var(--cp-border-color)
 </style>

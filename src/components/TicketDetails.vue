@@ -33,7 +33,7 @@
           <p :class="className('description')">{{ ticket.description }}</p>
         </div>
 
-        <div :class="className('field')">
+        <div :class="[className('field'), className('field', 'mobile-full')]">
           <span :class="className('label')">Status</span>
           <div :class="className('status-edit')">
             <Select v-model="status"
@@ -49,7 +49,7 @@
           </div>
         </div>
 
-        <div :class="className('field')">
+        <div :class="[className('field'), className('field', 'mobile-full')]">
           <span :class="className('label')">Priorytet</span>
           <span :class="[className('priority'), className('priority', ticket.priority)]">
             {{ priorityLabel(ticket.priority) }}
@@ -119,6 +119,8 @@ const goBack = (): void => {
 </script>
 
 <style lang="sass" scoped>
+@use '@/styles/variables' as *
+
 .ticket-details
   max-width: var(--cp-max-width-details)
   margin: var(--cp-spacing-xl) auto
@@ -240,7 +242,7 @@ const goBack = (): void => {
     color: var(--cp-text-secondary)
     margin: var(--cp-spacing-md) 0 var(--cp-spacing-lg)
 
-@media (max-width: var(--cp-breakpoint-md))
+@media (max-width: $cp-breakpoint-md)
   .ticket-details
     padding: var(--cp-spacing-md)
 
@@ -255,5 +257,10 @@ const goBack = (): void => {
       width: 100%
 
     &__field--full
+      grid-column: 1
+
+@media (max-width: $cp-breakpoint-sm)
+  .ticket-details
+    &__field--mobile-full
       grid-column: 1
 </style>
